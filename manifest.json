@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "Wordle Helper",
+  "version": "1.0",
+  "description": "A Firefox extension to assist with Wordle by suggesting possible words based on your guesses.",
+  "permissions": [
+    "activeTab", "scripting"
+  ],
+  "background": {
+    "scripts": ["src/background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.nytimes.com/games/wordle/index.html"],
+      "js": ["src/content.js"]
+    }
+  ],
+  "browser_action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": "worldehelper.png"
+  },
+  "icons": {
+    "16": "worldehelper.png",
+    "48": "worldehelper.png",
+    "128": "worldehelper.png"
+  }
+}
