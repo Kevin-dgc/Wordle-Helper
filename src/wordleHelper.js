@@ -52,10 +52,19 @@ export async  function getTopFiveWords(incorrectLetters, correctLetters, almostC
 
         // checks all correct letters are in the correct space
         for(let {char, pos} of correctLetters){
-            if(curWord[pos] !== char){
+            // does not have letter, skip
+            if(!curWord.includes(char)){
                 valid = false;
                 break;
             }
+
+            for (let i of pos) {
+                if (curWord[i] === char){
+                    valid = false;
+                    break;
+                }
+            }
+            if (!valid) break;
         }
 
         if(!valid) { continue; }

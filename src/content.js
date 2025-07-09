@@ -34,7 +34,12 @@ import(pathToHelper).then(module => {
                     if (state === 'absent') {
                         incorrectLetters.add(letter);
                     } else if (state === 'correct') {
-                        correctLetters.push({ char: letter, position: tileIndex });
+                        let existing = correctLetters.find(item => item.char === letter);
+                        if (existing) {
+                            existing.positions.push(tileIndex);
+                        } else {
+                            correctLetters.push({ char: letter, positions: [tileIndex] });
+                        }
                     } else if (state === 'present') {
                         let existing = almostCorrectLetters.find(item => item.char === letter);
                         if (existing) {
