@@ -1,5 +1,8 @@
 export async  function getTopFiveWords(incorrectLetters, correctLetters, almostCorrectLetters) {
     // This function will process the input data to generate the top five words for Wordle.
+    console.log(incorrectLetters);
+        console.log(correctLetters);
+    console.log(almostCorrectLetters);
 
     let allGoodWords = []; 
     let wordList = [];
@@ -19,6 +22,7 @@ export async  function getTopFiveWords(incorrectLetters, correctLetters, almostC
         wordList = [];
     }
 
+    
     for(let curWord of wordList){
         let valid = true;
 
@@ -31,14 +35,14 @@ export async  function getTopFiveWords(incorrectLetters, correctLetters, almostC
         }
         if(!valid) { continue; }
 
-        for(let {char, pos} of almostCorrectLetters){
+        for(let {char, positions} of almostCorrectLetters){
             // does not have letter, skip
             if(!curWord.includes(char)){
                 valid = false;
                 break;
             }
 
-            for (let i of pos) {
+            for (let i of positions) {
                 // checks all almost correct pos, skips if in wrong place
                 if (curWord[i] === char){
                     valid = false;
@@ -51,15 +55,15 @@ export async  function getTopFiveWords(incorrectLetters, correctLetters, almostC
         if(!valid) { continue; }
 
         // checks all correct letters are in the correct space
-        for(let {char, pos} of correctLetters){
+        for(let {char, positions} of correctLetters){
             // does not have letter, skip
             if(!curWord.includes(char)){
                 valid = false;
                 break;
             }
 
-            for (let i of pos) {
-                if (curWord[i] === char){
+            for (let i of positions) {
+                if (curWord[i] !== char){
                     valid = false;
                     break;
                 }

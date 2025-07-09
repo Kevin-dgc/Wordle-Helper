@@ -32,7 +32,11 @@ import(pathToHelper).then(module => {
                     }
 
                     if (state === 'absent') {
-                        incorrectLetters.add(letter);
+                        let existsInCorr = correctLetters.find(item => item.char === letter);
+                        let existsInAlmost = almostCorrectLetters.find(item => item.char === letter);
+                        if(!existsInCorr && !existsInAlmost){
+                            incorrectLetters.add(letter);
+                        }
                     } else if (state === 'correct') {
                         let existing = correctLetters.find(item => item.char === letter);
                         if (existing) {
