@@ -76,98 +76,92 @@ function suggestNDisplay(num){
 
     getTopFiveWords(incorrectLettersArray, correctLetters, almostCorrectLetters, num).then(words => {
         console.log("words are:", words);
-        displayWords(words);
+        displayWords(words, num);
     });
 }
 
-function displayWords(words) {
-    const oldBox = document.getElementById('wordle-helper-box');
-    if (oldBox) {
-        oldBox.remove();
-    }
+let helperBox, slider, sliderValueLabel, wordsList;
 
-    // add an X button to close it
+function displayWords(words, num = 5) {
+    
+     if (!helperBox) {
+        helperBox = document.createElement('div');
+        helperBox.id = 'wordle-helper-box';
+        Object.assign(helperBox.style, {
+            position: 'fixed',
+            top: '80px',
+            right: '30px',
+            padding: '15px',
+            backgroundColor: 'white',
+            border: '1px solid #d3d6da',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            zIndex: '10000',
+            fontFamily: 'sans-serif',
+            color: 'black'
+        });
 
-    const newBox = document.createElement('div');
-    newBox.id = 'wordle-helper-box';
+        const title = document.createElement('h3');
+        title.textContent = "Kevin's Wordle Helper WIP!";
+        Object.assign(title.style, {
+            margin: '0 0 10px 0',
+            fontSize: '18px'
+        });
+        helperBox.appendChild(title);
 
-    Object.assign(newBox.style, {
-        position: 'fixed',
-        top: '80px',
-        right: '30px',
-        padding: '15px',
-        backgroundColor: 'white',
-        border: '1px solid #d3d6da',
-        borderRadius: '8px',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        zIndex: '10000',
-        fontFamily: 'sans-serif',
-        color: 'black'
-    });
+        const sliderdiv = document.createElement('div');
+        Object.assign(sliderdiv.style, {
+            display: 'flex', alignItems: 'center', margin: '10px 0'
+        });
 
-    const title = document.createElement('h3');
-    title.textContent = "Kevin's Wordle Helper WIP!";
-    Object.assign(title.style, {
-        margin: '0 0 10px 0',
-        fontSize: '18px'
-    });
-    newBox.appendChild(title);
+        slider = document.createElement('input');
+        slider.type = 'range';
+        slider.min = '2';
+        slider.max = '10';
+        slider.value = num;
+        Object.assign(slider.style, { flexGrow: '1', marginRight: '10px' });
 
-    //
-    const sliderdiv = document.createElement('div');
-    Object.assign(sliderdiv.style, {
-        display: 'flex', alignItem: 'center', margin: '10px 0'
-    });
+        sliderValueLabel = document.createElement('span');
+        sliderValueLabel.textContent = slider.value;
 
-    const slider = document.createElement('input');
-    slider.type = 'range';
-    slider.min = '0';
-    slider.max = '10';
-    slider.value = '5';
-    Object.assign(slider.style, { flexGrow: '1', marginRight: '10px' });
+        sliderdiv.appendChild(slider);
+        sliderdiv.appendChild(sliderValueLabel);
+        helperBox.appendChild(sliderdiv);
 
-    const sliderValueLabel = document.createElement('span');
-    sliderValueLabel.textContent = slider.value;
-
-    sliderdiv.appendChild(slider);
-    sliderdiv.appendChild(sliderValueLabel);
-    newBox.appendChild(sliderdiv);
-
-    slider.addEventListener('input', () => {
-    const sliderNum = parseInt(slider.value, 10);
-    sliderValueLabel.textContent = sliderNum;
-
-    suggestNDisplay(sliderNum);
-    });
-    //
-
-
-    // make little slider to adjust how many words are shown.
-
-    if (words && words.length > 0 && words.some(word => word !== '')) {
-        const list = document.createElement('ul');
-        Object.assign(list.style, {
+        wordsList = document.createElement('ul');
+        Object.assign(wordsList.style, {
             listStyle: 'none',
             margin: '0',
             padding: '0'
         });
+        helperBox.appendChild(wordsList);
 
+        document.body.appendChild(helperBox);
+
+        slider.addEventListener('input', () => {
+            sliderValueLabel.textContent = slider.value;
+            suggestNDisplay(parseInt(slider.value, 10));
+        });
+    }
+
+    slider.value = num;
+    sliderValueLabel.textContent = num;
+
+    wordsList.innerHTML = '';
+    if (words && words.length > 0 && words.some(word => word !== '')) {
         words.forEach(word => {
             if (word) {
                 const listItem = document.createElement('li');
                 listItem.textContent = word.toUpperCase();
                 listItem.style.fontSize = '16px';
                 listItem.style.padding = '4px 0';
-                list.appendChild(listItem);
+                wordsList.appendChild(listItem);
             }
         });
-        newBox.appendChild(list);
     } else {
-        const noWords = document.createElement('p');
+        const noWords = document.createElement('li');
         noWords.textContent = 'No matching words found.';
         noWords.style.margin = '0';
-        newBox.appendChild(noWords);
+        wordsList.appendChild(noWords);
     }
-
-    document.body.appendChild(newBox);
 }
