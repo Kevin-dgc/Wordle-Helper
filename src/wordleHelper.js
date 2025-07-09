@@ -1,8 +1,8 @@
-export async  function getTopFiveWords(incorrectLetters, correctLetters, almostCorrectLetters) {
+export async  function getTopFiveWords(incorrectLetters, correctLetters, almostCorrectLetters, num) {
     // This function will process the input data to generate the top five words for Wordle.
-    console.log(incorrectLetters);
-        console.log(correctLetters);
-    console.log(almostCorrectLetters);
+    // console.log(incorrectLetters);
+    // console.log(correctLetters);
+    // console.log(almostCorrectLetters);
 
     let allGoodWords = []; 
     let wordList = [];
@@ -76,8 +76,8 @@ export async  function getTopFiveWords(incorrectLetters, correctLetters, almostC
         allGoodWords.push(curWord);
     }
 
-    const words = allGoodWords.slice(0,5);
-    while(words.length < 5){
+    const words = allGoodWords.slice(0,num);
+    while(words.length < num){
         words.push('');
     }
     return words;

@@ -5,7 +5,7 @@ function handleIconClick(tab){
     console.log("Worlde Helper clicked!");
 
     browser.tabs.sendMessage(tab.id, {
-        command : "getSuggestions"
+        command : "getSuggestions|5"
     }).catch(error => {
         console.error("cant send msg to script", error);
     })
