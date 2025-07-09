@@ -4,11 +4,11 @@
   "version": "1.0",
   "description": "A Firefox extension to assist with Wordle by suggesting possible words based on your guesses.",
   "permissions": [
-    "activeTab", "scripting"
+    "activeTab",
+    "scripting"
   ],
   "background": {
-    "scripts": ["src/background.js"],
-    "persistent": false
+    "scripts": ["src/background.js"]
   },
   "content_scripts": [
     {
@@ -17,12 +17,14 @@
     }
   ],
   "browser_action": {
-    "default_popup": "src/popup/popup.html",
-    "default_icon": "worldehelper.png"
+    "default_icon": "src/icons/worldehelper.png"
   },
+  "web_accessible_resources": [
+    "src/wordList.txt"
+  ],
   "icons": {
-    "16": "worldehelper.png",
-    "48": "worldehelper.png",
-    "128": "worldehelper.png"
+    "16": "src/icons/worldehelper.png",
+    "48": "src/icons/worldehelper.png",
+    "128": "src/icons/worldehelper.png"
   }
 }
