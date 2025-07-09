@@ -17,14 +17,14 @@
     }
   ],
   "browser_action": {
-    "default_icon": "src/icons/worldehelper.png"
+    "default_icon": "src/icons/worldehelper-48.png"
   },
   "web_accessible_resources": [
     "src/wordList.txt"
   ],
   "icons": {
-    "16": "src/icons/worldehelper.png",
-    "48": "src/icons/worldehelper.png",
-    "128": "src/icons/worldehelper.png"
+    "16": "src/icons/worldehelper-16.png",
+    "48": "src/icons/worldehelper-48.png",
+    "128": "src/icons/worldehelper-128.png"
   }
 }
