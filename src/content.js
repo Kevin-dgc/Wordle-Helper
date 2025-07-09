@@ -12,21 +12,20 @@ import(pathToHelper).then(module => {
             const correctLetters = [];
             const almostCorrectLetters = [];
 
-            const gameApp = document.querySelector('game-app');
-            if (!gameApp || !gameApp.shadowRoot) {
+            const gameApp = document.querySelector('.Board-module_board__jeoPS');
+            if (!gameApp) {
                 console.error("cant find dom");
                 return;
             }
 
-            const rows = gameApp.shadowRoot.querySelectorAll('game-row');
+            const rows = gameApp.querySelectorAll('.Row-module_row__pwpBq');
 
             rows.forEach((row) => {
-                if(!row.shadowRoot){ return; }
-                const tiles = row.shadowRoot.querySelectorAll('game-tile');
+                const tiles = row.querySelectorAll('.Tile-module_tile__UWEHN');
 
                 tiles.forEach((tile, tileIndex) => {
-                    const letter = tile.getAttribute('letter');
-                    const state = tile.getAttribute('state');
+                    const letter = tile.textContent;
+                    const state = tile.getAttribute('data-state');
 
                     if (!letter || !state) {
                         return;
@@ -49,9 +48,9 @@ import(pathToHelper).then(module => {
 
             const incorrectLettersArray = Array.from(incorrectLetters);
 
-            console.log("Incorrect Letters Found:", incorrectLettersArray);
-            console.log("Correct Letters Found:", correctLetters);
-            console.log("Almost Correct Letters Found:", almostCorrectLetters);
+            // console.log("Incorrect Letters Found:", incorrectLettersArray);
+            // console.log("Correct Letters Found:", correctLetters);
+            // console.log("Almost Correct Letters Found:", almostCorrectLetters);
 
             getTopFiveWords(incorrectLettersArray, correctLetters, almostCorrectLetters).then(words => {
                 console.log("words are:", words);
@@ -62,10 +61,6 @@ import(pathToHelper).then(module => {
 }).catch(error => {
     console.error("error!", error);
 });
-
-
-
-
 
 
 function displayWords(words) {
