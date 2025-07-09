@@ -98,11 +98,33 @@ function displayWords(words, num = 5) {
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             zIndex: '10000',
             fontFamily: 'sans-serif',
-            color: 'black'
+            color: 'black',
+            width: '220px'
         });
 
+        const exit = document.createElement('button');
+        exit.textContent = 'X';
+        Object.assign(exit.style, {
+            position: 'absolute',
+            top: '5px',
+            right: '8px',
+            background: 'transparent',
+            border: 'none',
+            fontSize: '18px',
+            cursor: 'pointer',
+            color: 'black'
+        });
+        exit.addEventListener('click', () => {
+            helperBox.remove();
+            helperBox = null;
+            slider = null;
+            sliderValueLabel = null;
+            wordsList = null;
+        });
+        helperBox.appendChild(exit);
+
         const title = document.createElement('h3');
-        title.textContent = "Kevin's Wordle Helper WIP!";
+        title.textContent = "Kevin's Wordle Helper";
         Object.assign(title.style, {
             margin: '0 0 10px 0',
             fontSize: '18px'
@@ -164,4 +186,42 @@ function displayWords(words, num = 5) {
         noWords.style.margin = '0';
         wordsList.appendChild(noWords);
     }
+}
+
+function setupBoardObserver(){
+    const board = document.querySelector('.Board-module_board__jeoPS');
+    if (!board) return;
+
+    let timeout;
+    const obs = new MutationObserver(() =>{
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            suggestNDisplay(slider ? parseInt(slider.value, 10) : 5);
+        }, 100);
+    });
+
+    obs.observe(board, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true
+    });
+}
+
+function waitForBoardAndObserve() {
+    const board = document.querySelector('.Board-module_board__jeoPS');
+    if (board) {
+        setupBoardObserver();
+        // Optionally, trigger the first suggestion
+        suggestNDisplay(slider ? parseInt(slider.value, 10) : 5);
+        return;
+    }
+    // If not found, try again in 200ms
+    setTimeout(waitForBoardAndObserve, 200);
+}
+
+if (document.readyState === "complete" || document.readyState === "interactive") {
+    waitForBoardAndObserve();
+} else {
+    window.addEventListener('DOMContentLoaded', waitForBoardAndObserve);
 }
