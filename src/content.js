@@ -1,23 +1,77 @@
-const pathToHelper = browser.runtime.getURL("src/wordleHelper.js");
-let getTopFiveWords;
 
-// fetches the words from the page
-import(pathToHelper).then(module => {
-    getTopFiveWords = module.getTopFiveWords;
+// Chrome/Firefox compatibility shim
+const browserApi = typeof chrome !== "undefined" ? chrome : browser;
 
-    browser.runtime.onMessage.addListener((message) => {
-        let [command, value] = message.command.split('|');
-
-        console.log(command);
-        console.log(value);
-
-        if (command === "getSuggestions") {
-            console.log("starting wordle helper");
-            suggestNDisplay(value);
+// Inlined getTopFiveWords from wordleHelper.js
+async function getTopFiveWords(incorrectLetters, correctLetters, almostCorrectLetters, num) {
+    let allGoodWords = [];
+    let wordList = [];
+    try {
+        const fileUrl = browserApi.runtime.getURL('src/wordList.txt');
+        const response = await fetch(fileUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-    });
-}).catch(error => {
-    console.error("error!", error);
+        const text = await response.text();
+        wordList = text.split('\n').map(word => word.trim()).filter(word => word.length > 0);
+    } catch (error) {
+        console.error("failed to get list", error);
+        wordList = [];
+    }
+    for (let curWord of wordList) {
+        let valid = true;
+        for (let char of incorrectLetters) {
+            if (curWord.includes(char)) {
+                valid = false;
+                break;
+            }
+        }
+        if (!valid) { continue; }
+        for (let { char, positions } of almostCorrectLetters) {
+            if (!curWord.includes(char)) {
+                valid = false;
+                break;
+            }
+            for (let i of positions) {
+                if (curWord[i] === char) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (!valid) break;
+        }
+        if (!valid) { continue; }
+        for (let { char, positions } of correctLetters) {
+            if (!curWord.includes(char)) {
+                valid = false;
+                break;
+            }
+            for (let i of positions) {
+                if (curWord[i] !== char) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (!valid) break;
+        }
+        if (!valid) { continue; }
+        allGoodWords.push(curWord);
+    }
+    const words = allGoodWords.slice(0, num);
+    while (words.length < num) {
+        words.push('');
+    }
+    return words;
+}
+
+browserApi.runtime.onMessage.addListener((message) => {
+    let [command, value] = message.command.split('|');
+    console.log(command);
+    console.log(value);
+    if (command === "getSuggestions") {
+        console.log("starting wordle helper");
+        suggestNDisplay(value);
+    }
 });
 
 function suggestNDisplay(num){

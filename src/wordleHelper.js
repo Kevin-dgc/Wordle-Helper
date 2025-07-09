@@ -1,15 +1,14 @@
-export async  function getTopFiveWords(incorrectLetters, correctLetters, almostCorrectLetters, num) {
-    // This function will process the input data to generate the top five words for Wordle.
-    // console.log(incorrectLetters);
-    // console.log(correctLetters);
-    // console.log(almostCorrectLetters);
+// Chrome/Firefox compatibility shim
+const browserApi = typeof chrome !== "undefined" ? chrome : browser;
 
-    let allGoodWords = []; 
+export async function getTopFiveWords(incorrectLetters, correctLetters, almostCorrectLetters, num) {
+    // This function will process the input data to generate the top five words for Wordle.
+    let allGoodWords = [];
     let wordList = [];
 
     // gets words
-    try{
-        const fileUrl = browser.runtime.getURL('src/wordList.txt');
+    try {
+        const fileUrl = browserApi.runtime.getURL('src/wordList.txt');
         const response = await fetch(fileUrl);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

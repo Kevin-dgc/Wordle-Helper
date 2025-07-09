@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Wordle Helper",
   "version": "1.0",
   "description": "A Firefox extension to assist with Wordle by suggesting possible words based on your guesses.",
@@ -8,7 +8,7 @@
     "scripting"
   ],
   "background": {
-    "scripts": ["src/background.js"]
+    "service_worker": "src/background.js"
   },
   "content_scripts": [
     {
@@ -16,11 +16,14 @@
       "js": ["src/content.js"]
     }
   ],
-  "browser_action": {
+  "action": {
     "default_icon": "src/icons/worldehelper-48.png"
   },
   "web_accessible_resources": [
-    "src/wordList.txt"
+  {
+    "resources": ["src/wordList.txt"],
+    "matches": ["<all_urls>"]
+  }
   ],
   "icons": {
     "16": "src/icons/worldehelper-16.png",

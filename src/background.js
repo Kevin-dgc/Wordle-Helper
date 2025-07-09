@@ -1,12 +1,16 @@
-// clicked on extension
-browser.browserAction.onClicked.addListener(handleIconClick);
+// Chrome/Firefox compatibility shim
+const browserApi = typeof chrome !== "undefined" ? chrome : browser;
 
-function handleIconClick(tab){
+// In MV3, use action.onClicked instead of browserAction
+browserApi.action.onClicked.addListener(handleIconClick);
+
+function handleIconClick(tab) {
     console.log("Worlde Helper clicked!");
-
-    browser.tabs.sendMessage(tab.id, {
-        command : "getSuggestions|5"
-    }).catch(error => {
-        console.error("cant send msg to script", error);
-    })
+    browserApi.tabs.sendMessage(tab.id, {
+        command: "getSuggestions|5"
+    }, () => {
+        if (chrome.runtime.lastError) {
+            console.error("cant send msg to script", chrome.runtime.lastError);
+        }
+    });
 }
